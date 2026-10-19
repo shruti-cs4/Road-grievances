@@ -11,7 +11,8 @@ const state = { ready: false, user: null, reports: [] }
 function normalizeReport(row) {
   return {
     id: row.id,
-    photo: null, // Photos are deliberately not uploaded or persisted in Supabase.
+    photo: row.photo_url || null,
+    photo_url: row.photo_url || null,
     lat: Number(row.lat),
     lng: Number(row.lng),
     address: row.address || '',
@@ -56,7 +57,7 @@ export async function refreshReports() {
   if (!supabase) throw new Error('Supabase is not configured.')
   const { data, error } = await supabase
     .from('reports')
-    .select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, description, status, created_at')
+    .select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at')
     .order('created_at', { ascending: false })
   if (error) throw error
   state.reports = (data || []).map(normalizeReport)
@@ -94,6 +95,38 @@ export async function logout() {
 
 export async function addReport(r) {
   if (!supabase || !state.user?.id) throw new Error('Please sign in before submitting a complaint.')
+  
+  let photoUrl = null
+  if (r.photo instanceof File) {
+    const file = r.photo
+
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Please upload an image file.')
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('Photo must be 5 MB or smaller.')
+    }
+
+    const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const filePath = `${state.user.id}/${crypto.randomUUID()}.${extension}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('complaint-photos')
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false,
+      })
+
+    if (uploadError) throw uploadError
+
+    const { data: publicData } = supabase.storage
+      .from('complaint-photos')
+      .getPublicUrl(filePath)
+
+    photoUrl = publicData.publicUrl
+  }
+
   const payload = {
     user_id: state.user.id,
     reporter_name: state.user.name,
@@ -106,9 +139,9 @@ export async function addReport(r) {
     severity: r.severity,
     description: String(r.description || '').trim().slice(0, 3000),
     status: 'reported',
+    photo_url: photoUrl,
   }
-  // Intentionally omit r.photo: this project configuration stores complaint details only.
-  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, description, status, created_at').single()
+  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at').single()
   if (error) throw error
   const report = normalizeReport(data)
   state.reports = [report, ...state.reports.filter((existing) => existing.id !== report.id)]

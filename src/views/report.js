@@ -13,6 +13,7 @@ const SEVERITY_HELP = {
 export function ReportView() {
   const state = {
     photo: null,
+    photoFile: null,
     category: 'Pothole',
     severity: 'medium',
     description: '',
@@ -96,7 +97,7 @@ export function ReportView() {
         <section class="form-section">
           <div>
             <span class="label">1. Photo of the damage</span>
-            <p class="section-hint">You can use a photo while preparing your report. This version stores complaint details only; photos are not uploaded or shared.</p>
+            <p class="section-hint">Add a photo of the damage. It will be uploaded and shared with your complaint.</p>
           </div>
           <div id="photo-slot">${photoMarkup()}</div>
         </section>
@@ -181,22 +182,58 @@ export function ReportView() {
       toast.error('Could not access the camera. Please allow permission or upload a photo.')
     }
   }
-
   function capture() {
     const video = root.querySelector('#cam-video')
     if (!video) return
-    state.photo = toResizedDataURL(video)
-    stopCamera()
-    renderPhotoSlot()
+
+    const canvas = document.createElement('canvas')
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    const context = canvas.getContext('2d')
+    context.drawImage(video, 0, 0)
+
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        toast.error('Could not capture the image.')
+        return
+      }
+
+      state.photoFile = new File(
+        [blob],
+        `road-damage-${Date.now()}.jpg`,
+        { type: 'image/jpeg' }
+      )
+
+      state.photo = URL.createObjectURL(blob)
+      stopCamera()
+      renderPhotoSlot()
+    }, 'image/jpeg', 0.85)
   }
 
   async function onFile(e) {
     const file = e.target.files?.[0]
     if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file.')
+      e.target.value = ''
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Please choose an image smaller than 5 MB.')
+      e.target.value = ''
+      return
+    }
+
     try {
+      state.photoFile = file
       state.photo = await fileToResizedDataURL(file)
       renderPhotoSlot()
     } catch {
+      state.photoFile = null
+      state.photo = null
       toast.error('Could not read that image.')
     } finally {
       e.target.value = ''
@@ -337,7 +374,11 @@ export function ReportView() {
     root.querySelector('#cam-capture')?.addEventListener('click', capture)
     root.querySelector('#photo-retake')?.addEventListener('click', openCamera)
     root.querySelector('#photo-remove')?.addEventListener('click', () => {
+      if (state.photo?.startsWith('blob:')) {
+        URL.revokeObjectURL(state.photo)
+      }
       state.photo = null
+      state.photoFile = null
       renderPhotoSlot()
     })
   }
@@ -388,7 +429,7 @@ export function ReportView() {
     if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Submitting…' }
     try {
       const report = await addReport({
-        // Photo is intentionally omitted from cloud persistence.
+        photo: state.photoFile,
         lat: state.location.lat,
         lng: state.location.lng,
         address: state.location.address,
