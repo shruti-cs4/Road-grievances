@@ -9,12 +9,16 @@
     "preview": "vite preview --host --port 3000"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "vite": "^5.4.10"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

@@ -67,9 +67,13 @@ export function renderShell(activeHref, contentNode) {
   `
 
   shell.querySelector('.main').appendChild(contentNode)
-  shell.querySelector('#logout-btn').addEventListener('click', () => {
-    logout()
-    navigate('#/login')
+  shell.querySelector('#logout-btn').addEventListener('click', async () => {
+    try {
+      await logout()
+      navigate('#/login')
+    } catch (error) {
+      console.error('Sign out failed:', error)
+    }
   })
 
   return shell

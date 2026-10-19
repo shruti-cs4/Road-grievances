@@ -104,9 +104,26 @@ export function LoginView() {
         toast.error('Please fill in all fields.')
         return
       }
-      login(email, mode === 'signup' ? name : undefined)
-      toast.success(mode === 'signup' ? 'Account created. Welcome!' : 'Signed in successfully.')
-      navigate('#/')
+      const submitButton = root.querySelector('button[type="submit"]')
+      submitButton.disabled = true
+      submitButton.textContent = mode === 'signup' ? 'Creating account…' : 'Signing in…'
+      login(email, password, mode === 'signup' ? name : undefined)
+        .then((result) => {
+          if (result.confirmationRequired) {
+            toast.message('Check your email to confirm your account', { description: 'After confirming, return here and sign in.' })
+            mode = 'signin'
+            root.innerHTML = template()
+            wire()
+            return
+          }
+          toast.success(mode === 'signup' ? 'Account created. Welcome!' : 'Signed in successfully.')
+          navigate('#/')
+        })
+        .catch((error) => {
+          toast.error('Authentication failed', { description: error.message || 'Please check your email and password.' })
+          const currentButton = root.querySelector('button[type="submit"]')
+          if (currentButton) { currentButton.disabled = false; currentButton.textContent = mode === 'signup' ? 'Create account' : 'Sign in' }
+        })
     })
   }
 

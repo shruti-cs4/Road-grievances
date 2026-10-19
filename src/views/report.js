@@ -96,7 +96,7 @@ export function ReportView() {
         <section class="form-section">
           <div>
             <span class="label">1. Photo of the damage</span>
-            <p class="section-hint">A clear photo helps authorities assess severity.</p>
+            <p class="section-hint">You can use a photo while preparing your report. This version stores complaint details only; photos are not uploaded or shared.</p>
           </div>
           <div id="photo-slot">${photoMarkup()}</div>
         </section>
@@ -373,7 +373,7 @@ export function ReportView() {
     root.querySelector('#detect-loc')?.addEventListener('click', detectLocation)
   }
 
-  root.addEventListener('submit', (e) => {
+  root.addEventListener('submit', async (e) => {
     e.preventDefault()
     if (!state.location) {
       toast.error('Please capture your location first.')
@@ -384,22 +384,32 @@ export function ReportView() {
       return
     }
     state.submitting = true
-    const report = addReport({
-      photo: state.photo,
-      lat: state.location.lat,
-      lng: state.location.lng,
-      address: state.location.address,
-      area: state.location.area,
-      city: state.location.city,
-      category: state.category,
-      severity: state.severity,
-      description: state.description.trim(),
-    })
-    toast.success('Complaint raised', {
-      description: `Reference #${report.id.slice(0, 6).toUpperCase()} • ${report.area}`,
-    })
-    stopCamera()
-    navigate('#/map')
+    const submitButton = root.querySelector('#submit-btn')
+    if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Submitting…' }
+    try {
+      const report = await addReport({
+        // Photo is intentionally omitted from cloud persistence.
+        lat: state.location.lat,
+        lng: state.location.lng,
+        address: state.location.address,
+        area: state.location.area,
+        city: state.location.city,
+        category: state.category,
+        severity: state.severity,
+        description: state.description.trim(),
+      })
+      toast.success('Complaint shared with Road-Fix', {
+        description: `Reference #${String(report.id).slice(0, 6).toUpperCase()} • ${report.area || report.city}`,
+      })
+      stopCamera()
+      navigate('#/map')
+    } catch (error) {
+      console.error('Complaint submission failed:', error)
+      state.submitting = false
+      const button = root.querySelector('#submit-btn')
+      if (button) { button.disabled = false; button.innerHTML = `${icon('send', 'icon-sm')} Raise complaint` }
+      toast.error('Could not submit complaint', { description: error.message || 'Please check your connection and try again.' })
+    }
   })
 
   render()

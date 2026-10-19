@@ -1,4 +1,4 @@
-import { getUser } from './store.js'
+import { getUser, refreshReports } from './store.js'
 import { renderShell } from './shell.js'
 import { LoginView } from './views/login.js'
 import { OverviewView } from './views/overview.js'
@@ -6,6 +6,7 @@ import { ReportView } from './views/report.js'
 import { MapView } from './views/map.js'
 import { AnalyticsView } from './views/analytics.js'
 import { SubmitView } from './views/submit.js'
+import { toast } from './toast.js'
 
 const ROUTES = {
   '#/': { view: OverviewView, protected: true },
@@ -15,48 +16,47 @@ const ROUTES = {
   '#/submit': { view: SubmitView, protected: true },
   '#/login': { view: LoginView, protected: false },
 }
+let renderVersion = 0
 
-/** Programmatic navigation. */
 export function navigate(hash) {
   if (location.hash === hash) render()
   else location.hash = hash
 }
-
 function currentHash() {
   const h = location.hash || '#/'
   return ROUTES[h] ? h : '#/'
 }
 
-function render() {
+async function render() {
+  const version = ++renderVersion
   const app = document.getElementById('app')
   const hash = currentHash()
+  const route = ROUTES[hash]
   const user = getUser()
-
-  // Auth guard
-  if (ROUTES[hash].protected && !user) {
-    if (location.hash !== '#/login') {
-      location.hash = '#/login'
-      return
-    }
+  if (route.protected && !user) {
+    if (location.hash !== '#/login') location.hash = '#/login'
+    else app.replaceChildren(LoginView())
+    return
   }
   if (hash === '#/login' && user) {
     location.hash = '#/'
     return
   }
-
-  const route = ROUTES[hash]
-  const content = route.view()
-
-  app.replaceChildren()
   if (route.protected) {
-    app.appendChild(renderShell(hash, content))
-  } else {
-    app.appendChild(content)
+    try {
+      await refreshReports()
+    } catch (error) {
+      console.error('Could not refresh reports:', error)
+      toast.error('Could not load shared complaints', { description: error.message || 'Check your connection and Supabase configuration.' })
+    }
   }
+  if (version !== renderVersion || currentHash() !== hash) return
+  const content = route.view()
+  app.replaceChildren()
+  app.appendChild(route.protected ? renderShell(hash, content) : content)
   window.scrollTo(0, 0)
 }
 
-/** Start the hash router. */
 export function startRouter() {
   window.addEventListener('hashchange', render)
   if (!location.hash) location.hash = getUser() ? '#/' : '#/login'
