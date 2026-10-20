@@ -83,6 +83,6 @@ export function renderShell(activeHref, contentNode) {
 export function loadingScreen() {
   const el = document.createElement('div')
   el.className = 'loading-screen'
-  el.innerHTML = `${icon('triangle-alert', 'icon pulse')}<span>Loading Road-Fix…</span>`
+  el.innerHTML = `${icon('triangle-alert', 'icon pulse')}<span>Loading Civil-Complaint…</span>`
   return el
 }

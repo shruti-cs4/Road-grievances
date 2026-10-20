@@ -123,17 +123,17 @@ export function downloadComplaintLetter(report, user = null) {
   paragraph(`I wish to bring to your attention a road/infrastructure safety issue recorded at ${safeText(report.address || 'the location specified below')}. The details of the complaint are provided for your inspection and necessary action.`)
   add('COMPLAINT DETAILS', { size: 12, gapAfter: 19 })
   const details = [
-    `Reference ID: ROADFIX-${safeText(report.id || 'N/A').toUpperCase()}`,
+    `Reference ID: CIVIL-COMPLAINT-${safeText(report.id || 'N/A').toUpperCase()}`,
     `Nature of issue: ${safeText(report.category || 'Road damage')}`,
     `Location: ${safeText(report.address || 'Not recorded')}`,
     `Area / locality: ${safeText(report.area || 'Not recorded')}`,
     `City / district: ${city}`,
     `Coordinates: Latitude ${Number.isFinite(Number(report.lat)) ? Number(report.lat).toFixed(6) : 'N/A'}, Longitude ${Number.isFinite(Number(report.lng)) ? Number(report.lng).toFixed(6) : 'N/A'}`,
     `Severity indicated by reporter: ${safeText(report.severity || 'Not assessed').toUpperCase()}`,
-    `Date reported on Road-Fix: ${formatDate(report.createdAt)}`,
-    `Current Road-Fix status: ${safeText(report.status || 'Reported')}`,
+    `Date reported on Civil-Complaint: ${formatDate(report.createdAt)}`,
+    `Current Civil-Complaint status: ${safeText(report.status || 'Reported')}`,
     `Description: ${safeText(report.description || 'No additional description provided.')}`,
-    `Photograph: ${report.photo ? 'A photograph is available in the Road-Fix report; please attach the original image separately if required.' : 'No photograph was attached to this report.'}`,
+    `Photograph: ${report.photo ? 'A photograph is available in the Civil-Complaint report; please attach the original image separately if required.' : 'No photograph was attached to this report.'}`,
   ]
   details.forEach((detail) => wrap(detail, 88).forEach((line) => add(line, { gapAfter: 15 })))
   add('', { gapAfter: 7 })
@@ -153,7 +153,7 @@ export function downloadComplaintLetter(report, user = null) {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
-  anchor.download = `Road-Fix_Complaint_${safeText(report.id || 'report').replace(/\s/g, '')}.pdf`
+  anchor.download = `Civil_Complaint_${safeText(report.id || 'report').replace(/\s/g, '')}.pdf`
   document.body.appendChild(anchor)
   anchor.click()
   anchor.remove()

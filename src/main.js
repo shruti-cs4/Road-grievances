@@ -8,7 +8,7 @@ async function startApp() {
     await initStore()
     startRouter()
   } catch (error) {
-    console.error('Road-Fix startup failed:', error)
+    console.error('Civil-Complaint startup failed:', error)
 
     const app = document.getElementById('app')
     if (app) {
@@ -25,7 +25,7 @@ async function startApp() {
 
       app.innerHTML = `
         <main style="max-width:720px;margin:4rem auto;padding:2rem;font-family:system-ui">
-          <h1>Road-Fix setup required</h1>
+          <h1>Civil-Complaint setup required</h1>
           <p>${message}</p>
           <p>
             Create a Supabase project, configure <code>.env</code>,
@@ -36,7 +36,7 @@ async function startApp() {
       `
     }
 
-    toast.error('Road-Fix could not connect to the shared database.', {
+    toast.error('Civil-Complaint could not connect to the shared database.', {
       description: error.message,
     })
   }

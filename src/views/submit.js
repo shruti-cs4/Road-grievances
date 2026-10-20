@@ -51,7 +51,7 @@ export function SubmitView() {
     <section class="page-heading">
       <p class="eyebrow">Citizen action centre</p>
       <h1>Take your complaint to the right authority.</h1>
-      <p>Download a formal, complaint-specific letter, check the relevant government channel, and submit it yourself. Road-Fix does not send complaints to government systems automatically.</p>
+      <p>Download a formal, complaint-specific letter, check the relevant government channel, and submit it yourself. Civil-Complaint does not send complaints to government systems automatically.</p>
     </section>
 
     <section class="notice-card">
@@ -81,7 +81,7 @@ export function SubmitView() {
                 <div class="submission-title-row"><h3>${r.category}</h3>${severityBadge(r.severity)}</div>
                 <p class="row-sub">${r.address || `${r.area || ''}, ${r.city || ''}`}</p>
                 <p class="submission-description">${r.description || 'No additional description provided.'}</p>
-                <div class="submission-meta">${statusBadge(r.status)} <span>Ref: ROADFIX-${String(r.id).toUpperCase()}</span></div>
+                <div class="submission-meta">${statusBadge(r.status)} <span>Ref: CIVIL-COMPLAINT-${String(r.id).toUpperCase()}</span></div>
               </div>
             </div>
             <button type="button" class="btn btn-primary btn-sm" data-download="${r.id}">${icon('file-down', 'icon-sm')} Download letter PDF</button>

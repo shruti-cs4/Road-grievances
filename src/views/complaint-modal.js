@@ -28,7 +28,7 @@ export function openComplaintModal(report) {
       <div class="complaint-modal-body">
         <div class="complaint-modal-heading">
           <div>
-            <p class="complaint-modal-eyebrow">ROAD-FIX COMPLAINT</p>
+            <p class="complaint-modal-eyebrow">CIVIL-COMPLAINT</p>
             <h2 id="complaint-modal-title">${escapeHTML(report.category || 'Road damage')}</h2>
           </div>
           <span class="complaint-modal-severity severity-${escapeHTML(report.severity || 'low')}">

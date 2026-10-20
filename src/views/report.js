@@ -325,7 +325,7 @@ export function ReportView() {
           case err.PERMISSION_DENIED:
             toast.error('Location permission denied', {
               description:
-                'Please allow location access for Road-Fix in your browser settings.',
+                'Please allow location access for Civil-Complaint in your browser settings.',
             })
             break
 
@@ -439,7 +439,7 @@ export function ReportView() {
         severity: state.severity,
         description: state.description.trim(),
       })
-      toast.success('Complaint shared with Road-Fix', {
+      toast.success('shared with Civil-Complaint', {
         description: `Reference #${String(report.id).slice(0, 6).toUpperCase()} • ${report.area || report.city}`,
       })
       stopCamera()

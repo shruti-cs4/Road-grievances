@@ -23,14 +23,14 @@ function normalizeReport(row) {
     description: row.description,
     status: row.status || 'reported',
     created_at: row.created_at,
-    reporter_name: row.reporter_name || 'Road-Fix user',
+    reporter_name: row.reporter_name || 'Civil-Complaint user',
     reporterEmail: '',
   }
 }
 
 function normalizeUser(user) {
   if (!user) return null
-  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Road-Fix user'
+  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'Civil-Complaint user'
   return { id: user.id, email: user.email || '', name }
 }
 

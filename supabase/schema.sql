@@ -3,7 +3,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.reports (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
-  reporter_name text not null default 'Road-Fix user',
+  reporter_name text not null default 'Civil-Complaint user',
   lat double precision not null check (lat between -90 and 90),
   lng double precision not null check (lng between -180 and 180),
   address text not null default '',

@@ -19,7 +19,7 @@ function nextAnalysisDate() {
 
 function buildReportText(hotspots) {
   const lines = []
-  lines.push('ROAD-FIX — HIGH-PRIORITY ROAD DAMAGE REPORT')
+  lines.push('CIVIL-COMPLAINT — HIGH-PRIORITY ROAD DAMAGE REPORT')
   lines.push(`Generated: ${new Date().toLocaleString('en-IN')}`)
   lines.push('Prepared for: Public Works Department, Government of Maharashtra')
   lines.push('='.repeat(56))
@@ -142,7 +142,7 @@ export function AnalyticsView() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'roadfix-priority-report.txt'
+    a.download = 'civil-complaint-priority-report.txt'
     a.click()
     URL.revokeObjectURL(url)
     toast.success('Priority report generated', {

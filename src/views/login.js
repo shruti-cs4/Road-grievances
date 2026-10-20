@@ -54,7 +54,7 @@ export function LoginView() {
           <p class="sub">${
             mode === 'signin'
               ? 'Sign in to report and track road damage.'
-              : 'Join Road-Fix to start reporting road damage.'
+              : 'Join Civil-Complaint to start reporting road damage.'
           }</p>
           <form class="auth-fields" id="auth-form">
             ${
