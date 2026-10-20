@@ -22,7 +22,7 @@ function normalizeReport(row) {
     severity: row.severity,
     description: row.description,
     status: row.status || 'reported',
-    createdAt: row.created_at,
+    created_at: row.created_at,
     reporter_name: row.reporter_name || 'Road-Fix user',
     reporterEmail: '',
   }
