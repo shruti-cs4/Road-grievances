@@ -1692,3 +1692,227 @@ a {
     max-width: 6.5rem;
   }
 }
+
+
+
+.complaint-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(5, 8, 14, 0.82);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.complaint-modal-card {
+  width: min(760px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  position: relative;
+  background: #1b202a;
+  color: #f5f6f8;
+  border: 1px solid #353b47;
+  border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.complaint-modal-photo {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  background: #252b36;
+}
+
+.complaint-modal-no-photo {
+  height: 180px;
+  display: grid;
+  place-items: center;
+  color: #a0a7b4;
+  background: #252b36;
+}
+
+.complaint-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 18, 25, 0.85);
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.complaint-modal-body {
+  padding: 24px;
+}
+
+.complaint-modal-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.complaint-modal-heading h2 {
+  margin: 4px 0 0;
+  font-size: 26px;
+}
+
+.complaint-modal-eyebrow {
+  margin: 0;
+  color: #ffa52f;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  font-weight: 700;
+}
+
+.complaint-modal-severity {
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #44331e;
+  color: #ffbd66;
+  white-space: nowrap;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.complaint-modal-severity.severity-high {
+  background: #482629;
+  color: #ff7777;
+}
+
+.complaint-modal-severity.severity-low {
+  background: #243b31;
+  color: #83ddb0;
+}
+
+.complaint-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.complaint-modal-field {
+  padding: 14px;
+  border: 1px solid #343b47;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.complaint-modal-field span {
+  display: block;
+  color: #9ca4b2;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+.complaint-modal-field strong {
+  display: block;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.complaint-modal-section {
+  margin-top: 24px;
+}
+
+.complaint-modal-section h3 {
+  font-size: 15px;
+  margin: 0 0 9px;
+}
+
+.complaint-modal-section p {
+  margin: 5px 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.complaint-modal-muted {
+  color: #9ca4b2;
+  font-size: 13px;
+}
+
+.complaint-modal-description {
+  white-space: pre-wrap;
+}
+
+.complaint-modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.complaint-modal-actions button {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid #414957;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.complaint-modal-map {
+  background: #ffa52f;
+  color: #171717;
+  border-color: #ffa52f !important;
+}
+
+.complaint-modal-pdf {
+  background: #252b36;
+  color: #f5f6f8;
+}
+
+@media (max-width: 600px) {
+  .complaint-modal-overlay {
+    padding: 10px;
+  }
+
+  .complaint-modal-card {
+    max-height: 95vh;
+  }
+
+  .complaint-modal-photo {
+    height: 220px;
+  }
+
+  .complaint-modal-body {
+    padding: 17px;
+  }
+
+  .complaint-modal-heading h2 {
+    font-size: 21px;
+  }
+
+  .complaint-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .complaint-modal-actions {
+    flex-direction: column;
+  }
+}
+
+.complaint-clickable {
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.complaint-clickable:hover {
+  border-color: var(--primary);
+  background: rgba(255, 165, 47, 0.04);
+}
+
+.complaint-clickable:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}

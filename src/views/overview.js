@@ -2,6 +2,7 @@ import { icon } from '../icons.js'
 import { getUser, getReports, computeHotspots } from '../store.js'
 import { severityBadge, statusBadge } from '../badges.js'
 import { downloadComplaintLetter } from '../pdf.js'
+import { openComplaintModal } from './complaint-modal.js'
 
 const STEPS = [
   { ic: 'camera', title: 'Capture', text: 'Photograph the road damage.' },
@@ -79,7 +80,11 @@ export function OverviewView() {
           ${recent
             .map(
               (r) => `
-            <div class="recent-row">
+            <div class="recent-row complaint-clickable"
+              data-complaint="${r.id}"
+              role="button"
+              tabindex="0"
+              aria-label="View ${r.category} complaint details">
               <div class="thumb">
                 ${r.photo ? `<img src="${r.photo}" alt="${r.category}" />` : icon('map-pin', 'icon-sm')}
               </div>
@@ -146,6 +151,23 @@ export function OverviewView() {
     button.addEventListener('click', () => {
       const report = reports.find((r) => r.id === button.dataset.download)
       if (report) downloadComplaintLetter(report, user)
+    })
+  })
+  root.querySelectorAll('[data-complaint]').forEach((row) => {
+    const openDetails = () => {
+      const report = reports.find((r) => String(r.id) === row.dataset.complaint)
+      if (report) openComplaintModal(report)
+    }
+    row.addEventListener('click', (event) => {
+      if (event.target.closest('[data-download]')) return
+      openDetails()
+    })
+    row.addEventListener('keydown', (event) => {
+      if (event.target !== row) return
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        openDetails()
+      }
     })
   })
 
