@@ -57,8 +57,14 @@ export async function reverseGeocode(lat, lng) {
     }
 
     const data = await res.json()
+    console.log('Reverse geocoding debug:', {
+      requestedLat: lat,
+      requestedLng: lng,
+      displayName: data?.display_name,
+      address: data?.address,
+    })
 
-    // API returned no usable address
+    
     if (!data || !data.display_name) {
       throw new Error('Reverse geocoding returned no address')
     }
