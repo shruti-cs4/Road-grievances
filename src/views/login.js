@@ -21,7 +21,7 @@ export function LoginView() {
         <div class="stripes" aria-hidden="true"></div>
         <div class="auth-brand-head">
           <span class="brand-badge">${icon('triangle-alert', 'icon-lg')}</span>
-          <span class="brand-name">Road<span class="accent">-Fix</span></span>
+          <span class="brand-name">Civil<span class="accent">-Complaint</span></span>
         </div>
         <div class="auth-copy">
           <p class="region">Maharashtra</p>
@@ -48,7 +48,7 @@ export function LoginView() {
         <div class="auth-form">
           <div class="auth-form-brand">
             <span class="brand-badge">${icon('triangle-alert', 'icon')}</span>
-            <span class="brand-name">Road<span class="accent">-Fix</span></span>
+            <span class="brand-name">Civil<span class="accent">-Complaint</span></span>
           </div>
           <h2>${mode === 'signin' ? 'Welcome back' : 'Create your account'}</h2>
           <p class="sub">${

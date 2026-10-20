@@ -45,7 +45,7 @@ export function renderShell(activeHref, contentNode) {
       <div class="appbar-inner">
         <a href="#/" class="brand">
           <span class="brand-badge">${icon('triangle-alert', 'icon')}</span>
-          <span class="brand-name">Road<span class="accent">-Fix</span></span>
+          <span class="brand-name">Civil<span class="accent">-Complaint</span></span>
         </a>
         <nav class="nav-desktop">${desktopNav}</nav>
         <div class="appbar-user">
