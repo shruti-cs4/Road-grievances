@@ -28,7 +28,7 @@ function show(type, title, description) {
     el.addEventListener('transitionend', () => el.remove(), { once: true })
     setTimeout(() => el.remove(), 400)
   }
-  setTimeout(remove, 3800)
+  setTimeout(remove, 10000)
   el.addEventListener('click', remove)
 }
 
