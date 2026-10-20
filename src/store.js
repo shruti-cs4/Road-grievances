@@ -57,7 +57,7 @@ export async function refreshReports() {
   if (!supabase) throw new Error('Supabase is not configured.')
   const { data, error } = await supabase
     .from('reports')
-    .select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at')
+    .select('id, user_id, reporter, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at')
     .order('created_at', { ascending: false })
   if (error) throw error
   state.reports = (data || []).map(normalizeReport)
@@ -141,7 +141,7 @@ export async function addReport(r) {
     status: 'reported',
     photo_url: photoUrl,
   }
-  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at').single()
+  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at').single()
   if (error) throw error
   const report = normalizeReport(data)
   state.reports = [report, ...state.reports.filter((existing) => existing.id !== report.id)]
