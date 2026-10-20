@@ -137,6 +137,7 @@ export async function addReport(r) {
     city: String(r.city || '').slice(0, 200),
     category: r.category,
     severity: r.severity,
+    photo_url: photoUrl,
     description: String(r.description || '').trim().slice(0, 3000),
     status: 'reported',
   }
