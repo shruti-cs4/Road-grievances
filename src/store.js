@@ -23,7 +23,7 @@ function normalizeReport(row) {
     description: row.description,
     status: row.status || 'reported',
     createdAt: row.created_at,
-    reporter: row.reporter_name || 'Road-Fix user',
+    reporter_name: row.reporter_name || 'Road-Fix user',
     reporterEmail: '',
   }
 }
@@ -57,7 +57,7 @@ export async function refreshReports() {
   if (!supabase) throw new Error('Supabase is not configured.')
   const { data, error } = await supabase
     .from('reports')
-    .select('id, user_id, reporter, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at')
+    .select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at')
     .order('created_at', { ascending: false })
   if (error) throw error
   state.reports = (data || []).map(normalizeReport)
@@ -109,7 +109,7 @@ export async function addReport(r) {
     }
 
     const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-    const filePath = `${state.user.id}/${crypto.randomUUID()}.${extension}`
+    const filePath =`${state.user.id}/${crypto.randomUUID()}.${extension}`
 
     const { error: uploadError } = await supabase.storage
       .from('complaint-photos')
@@ -139,9 +139,8 @@ export async function addReport(r) {
     severity: r.severity,
     description: String(r.description || '').trim().slice(0, 3000),
     status: 'reported',
-    photo_url: photoUrl,
   }
-  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at').single()
+  const { data, error } = await supabase.from('reports').insert(payload).select('id, user_id, reporter_name, lat, lng, address, area, city, category, severity, photo_url, description, status, created_at').single()
   if (error) throw error
   const report = normalizeReport(data)
   state.reports = [report, ...state.reports.filter((existing) => existing.id !== report.id)]
