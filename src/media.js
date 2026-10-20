@@ -66,20 +66,23 @@ export async function reverseGeocode(lat, lng) {
     const a = data.address ?? {}
 
     const area =
-      a.suburb ||
       a.neighbourhood ||
-      a.quarter ||
-      a.city_district ||
       a.residential ||
+      a.quarter ||
+      a.suburb ||
+      a.city_district ||
+      a.village ||
+      a.hamlet ||
+      a.town ||
       a.road ||
       fallback.area
 
     const city =
       a.city ||
       a.town ||
-      a.village ||
       a.municipality ||
       a.state_district ||
+      a.county ||
       fallback.city
 
     return {
